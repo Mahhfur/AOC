@@ -1,0 +1,100 @@
+.data
+prompt_height:      .asciiz "Entre com a altura do paralelepipedo: \n"
+                    .align 1
+prompt_width:       .asciiz "Entre com a largura do paralelepipedo: \n"
+                    .align 1
+prompt_thickness:   .asciiz "Entre com a espessura do paralelepipedo: \n"
+                    .align 1
+invalid_input:      .asciiz "Medida invalida.\n"
+                    .align 1
+volume_message:     .asciiz "Volume do paralelepipedo: "
+                    .align 1
+ 
+.text
+.globl main
+ 
+ 
+main:
+    li $v0, 4
+    la $a0, prompt_height
+    syscall
+ 
+read_height:
+    li $v0, 5
+    syscall
+ 
+    move $t1, $v0   # Salva a altura em $t1
+ 
+    blez $t1, invalid_height
+ 
+    li $v0, 4
+    la $a0, prompt_width
+    syscall
+ 
+read_width:
+    li $v0, 5
+    syscall
+ 
+    move $t2, $v0   # Salva a largura em $t2
+ 
+    blez $t2, invalid_width
+ 
+    li $v0, 4
+    la $a0, prompt_thickness
+    syscall
+ 
+read_thickness:
+    li $v0, 5
+    syscall
+ 
+    move $t3, $v0   # Salva a espessura em $t3
+ 
+    blez $t3, invalid_thickness
+ 
+    # Calcula o volume (altura * largura * espessura)
+    mul $t4, $t1, $t2  # $t4 = altura * largura
+    mul $t5, $t4, $t3  # $t5 = (altura * largura) * espessura
+ 
+    li $v0, 4
+    la $a0, volume_message
+    syscall
+ 
+    li $v0, 1
+    move $a0, $t5
+    syscall
+ 
+    li $v0, 10
+    syscall
+ 
+invalid_height:
+    li $v0, 4
+    la $a0, invalid_input
+    syscall
+ 
+    li $v0, 4
+    la $a0, prompt_height
+    syscall
+ 
+    j read_height
+ 
+invalid_width:
+    li $v0, 4
+    la $a0, invalid_input
+    syscall
+ 
+    li $v0, 4
+    la $a0, prompt_width
+    syscall
+ 
+    j read_width
+ 
+invalid_thickness:
+    li $v0, 4
+    la $a0, invalid_input
+    syscall
+    
+    li $v0, 4
+    la $a0, prompt_thickness
+    syscall
+ 
+    j read_thickness
