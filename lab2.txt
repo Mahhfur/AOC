@@ -1,0 +1,447 @@
+.data
+ 
+prompt_coord_x:     .asciiz "Entre com a coordenada x do ponto P: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+prompt_coord_y:     .asciiz "Entre com a coordenada y do ponto P: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+prompt_brilho_A:    .asciiz "Entre com o brilho do pixel A: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+prompt_brilho_B:    .asciiz "Entre com o brilho do pixel B: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+prompt_brilho_C:    .asciiz "Entre com o brilho do pixel C: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+prompt_brilho_D:    .asciiz "Entre com o brilho do pixel D: \n"
+ 
+                    .align 1
+ 
+ 
+ 
+invalid_coord_msg:  .asciiz "Coordenada invalida.\n"
+ 
+                    .align 1
+ 
+ 
+ 
+invalid_brilho_msg: .asciiz "Brilho invalido.\n"
+ 
+                    .align 1
+ 
+ 
+ 
+valor_message:      .asciiz "Valor do brilho do ponto P: "
+ 
+                    .align 1
+ 
+ 
+ 
+float1:             .float 1.0
+ 
+float0:             .float 0.0
+ 
+ 
+ 
+.text
+ 
+.globl main
+ 
+ 
+ 
+main:
+ 
+   # pede coordenada x
+ 
+read_x:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_coord_x
+ 
+    syscall
+ 
+    
+ 
+    li $v0, 6
+ 
+    syscall
+ 
+    mov.s $f1, $f0  #coordenada x em f1
+ 
+    
+ 
+    l.s $f0, float0  #coloca o 0.0 no f0
+ 
+    c.lt.s $f1, $f0  # se for menor que f0 pede de novo
+ 
+    bc1t invalid_coord_x
+ 
+    
+ 
+    l.s $f0, float1  #coloca o 1.0 no f0
+ 
+    c.lt.s $f0, $f1  # se for maior que f1 pede de novo
+ 
+    bc1t invalid_coord_x
+ 
+    
+ 
+# pede coordenada y
+ 
+read_y:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_coord_y
+ 
+    syscall
+ 
+    
+ 
+    li $v0, 6
+ 
+    syscall
+ 
+    mov.s $f2, $f0  #coordenada y em f2
+ 
+    
+ 
+    l.s $f0, float0  #coloca o 0.0 no f0
+ 
+    c.lt.s $f2, $f0  # se for menor que f0 pede de novo
+ 
+    bc1t invalid_coord_y
+ 
+    
+ 
+    l.s $f0, float1  #coloca o 1.0 no f0
+ 
+    c.lt.s $f0, $f2  # se for maior que $f2 pede de novo
+ 
+    bc1t invalid_coord_y
+ 
+    
+ 
+# pede brilho A    
+ 
+read_ba:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_brilho_A
+ 
+    syscall
+ 
+ 
+ 
+    li $v0, 5
+ 
+    syscall
+ 
+ 
+ 
+    move $t1, $v0                   #brilho A em $t1
+ 
+    bltz $t1, invalid_brilhoA 
+ 
+    li $t0, 255                     # Carrega o valor 255 em $t1
+ 
+    bgt $t1, $t0, invalid_brilhoA   # Salta se $t0 for maior que $t1
+ 
+ 
+ 
+    mtc1 $t1, $f3             #move para float
+ 
+    cvt.s.w $f3, $f3          #brilho A em $f3
+ 
+    
+ 
+ 
+ 
+# pede brilho B  
+ 
+read_bb:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_brilho_B
+ 
+    syscall
+ 
+ 
+ 
+    li $v0, 5
+ 
+    syscall
+ 
+ 
+ 
+    move $t1, $v0                   #brilho A em $t1
+ 
+    bltz $t1, invalid_brilhoB
+ 
+    li $t0, 255                     # Carrega o valor 255 em $t1
+ 
+    bgt $t1, $t0, invalid_brilhoB  # Salta se $t0 for maior que $t1
+ 
+ 
+ 
+    mtc1 $t1, $f4             #move para float
+ 
+    cvt.s.w $f4, $f4          #brilho B em $f4
+ 
+ 
+ 
+    
+ 
+# pede brilho C
+ 
+read_bc:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_brilho_C
+ 
+    syscall
+ 
+ 
+ 
+    li $v0, 5
+ 
+    syscall
+ 
+ 
+ 
+    move $t1, $v0                   #brilho C em $t1
+ 
+    bltz $t1, invalid_brilhoC
+ 
+    li $t0, 255                     # Carrega o valor 255 em $t1
+ 
+    bgt $t1, $t0, invalid_brilhoC  # Salta se $t0 for maior que $t1
+ 
+ 
+ 
+    mtc1 $t1, $f5             #move para float
+ 
+    cvt.s.w $f5, $f5          #brilho C em $f5
+ 
+    
+ 
+# pede brilho D
+ 
+read_bd:
+ 
+    li $v0, 4
+ 
+    la $a0, prompt_brilho_D
+ 
+    syscall
+ 
+ 
+ 
+    li $v0, 5
+ 
+    syscall
+ 
+ 
+ 
+    move $t1, $v0                   #brilho C em $t1
+ 
+    bltz $t1, invalid_brilhoD 
+ 
+    li $t0, 255                     # Carrega o valor 255 em $t1
+ 
+    bgt $t1, $t0, invalid_brilhoD  # Salta se $t0 for maior que $t1
+ 
+ 
+ 
+    mtc1 $t1, $f6             #move para float
+ 
+    cvt.s.w $f6, $f6         #brilho D em $f6
+ 
+ 
+ 
+#fazendo a conta
+ 
+   l.s $f0, float1
+ 
+    sub.s $f7, $f0, $f1   #1.0-x - $f7
+ 
+    
+ 
+    sub.s $f8, $f0, $f2   #1.0-y - $f8
+ 
+    
+ 
+    mul.s $f9, $f8, $f7
+ 
+    mul.s $f9, $f9, $f3    #multiplica com bA
+ 
+    
+ 
+    mul.s $f10, $f2, $f7
+ 
+    mul.s $f10, $f10, $f4  #multiplica com bB
+ 
+    
+ 
+    mul.s $f11, $f1, $f8
+ 
+    mul.s $f11, $f11, $f5  #multiplica com bC
+ 
+    
+ 
+    mul.s $f13, $f1, $f2
+ 
+    mul.s $f13, $f13, $f6
+ 
+    
+ 
+    add.s $f12, $f9, $f10
+ 
+    add.s $f12, $f12, $f11
+ 
+    add.s $f12, $f12, $f13
+ 
+    
+ 
+    li $v0, 4
+ 
+    la $a0, valor_message
+ 
+    syscall
+ 
+    
+ 
+    round.w.s $f12, $f12
+ 
+    mfc1 $a0, $f12           # moving the integer into $a0
+ 
+    li $v0, 1                # load code to print integer
+ 
+    syscall
+ 
+    
+ 
+    
+ 
+ 
+ 
+   # li $v0, 2
+ 
+   # syscall
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    #exit
+ 
+    li $v0, 10
+ 
+    syscall
+ 
+ 
+ 
+invalid_coord_x:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_coord_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_x
+ 
+ 
+ 
+invalid_coord_y:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_coord_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_y
+ 
+ 
+ 
+invalid_brilhoA:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_brilho_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_ba
+ 
+    
+ 
+invalid_brilhoB:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_brilho_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_bb
+ 
+ 
+ 
+invalid_brilhoC:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_brilho_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_bc
+ 
+ 
+ 
+invalid_brilhoD:
+ 
+    li $v0, 4
+ 
+    la $a0, invalid_brilho_msg
+ 
+    syscall
+ 
+ 
+ 
+    j read_bd
